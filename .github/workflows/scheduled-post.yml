@@ -1,0 +1,56 @@
+name: Scheduled Auto Post from N8N
+
+on:
+  # Chạy vào 00:00, 09:00, 21:00 mỗi ngày (UTC+7 = GMT+7)
+  # Cron time là UTC, nên cần trừ 7 giờ
+  # 00:00 UTC+7 = 17:00 UTC (ngày hôm trước)
+  # 09:00 UTC+7 = 02:00 UTC
+  # 21:00 UTC+7 = 14:00 UTC
+  schedule:
+    - cron: '0 17 * * *'  # 00:00 UTC+7 (17:00 UTC ngày trước)
+    - cron: '0 2 * * *'   # 09:00 UTC+7 
+    - cron: '0 14 * * *'  # 21:00 UTC+7
+  
+  # Cho phép trigger từ webhook (N8N)
+  repository_dispatch:
+    types: [new-post]
+  
+  # Cho phép chạy thủ công
+  workflow_dispatch:
+
+jobs:
+  check-and-deploy:
+    name: Check for new posts and deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history
+      
+      - name: Check for new blog posts
+        id: check-posts
+        run: |
+          # Kiểm tra xem có file mới trong src/data/blog/ không
+          NEW_POSTS=$(git diff --name-only HEAD~1 HEAD | grep "^src/data/blog/.*\.md$" || true)
+          
+          if [ -n "$NEW_POSTS" ]; then
+            echo "has_new_posts=true" >> $GITHUB_OUTPUT
+            echo "New posts detected:"
+            echo "$NEW_POSTS"
+          else
+            echo "has_new_posts=false" >> $GITHUB_OUTPUT
+            echo "No new posts detected"
+          fi
+      
+      - name: Trigger deployment
+        if: steps.check-posts.outputs.has_new_posts == 'true'
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          event-type: trigger-deploy
+          
+      - name: No deployment needed
+        if: steps.check-posts.outputs.has_new_posts == 'false'
+        run: |
+          echo "Không có bài viết mới, bỏ qua deployment"
