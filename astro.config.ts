@@ -21,7 +21,7 @@ export default defineConfig({
   ],
   markdown: {
     remarkPlugins: [
-      [remarkToc, { heading: "Mục lục" }],        // Plugin 1: Tạo mục lục
+      [remarkToc, { heading: "Mục lục", maxDepth: 2 }],        // Plugin 1: Tạo mục lục
       // [remarkCollapse, { test: "Mục lục" }]    // Plugin 2: Ẩn/hiện mục lục
     ],
     shikiConfig: {
