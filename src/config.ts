@@ -3,7 +3,7 @@ export const SITE = {
   author: "Duc Vu",
   profile: "https://ducvu.vn/",
   desc: "Chia sẻ kiến thức về Kinh doanh, Công nghệ và Marketing - Blog cá nhân của Duc Vu",
-  title: "Duc Vu - Business • Tech • Marketing",
+  title: "Duc Vu",
   ogImage: "ducvu-og.jpg",
   lightAndDarkMode: true,
   postPerIndex: 6,
