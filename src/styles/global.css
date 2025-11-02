@@ -13,7 +13,7 @@ html[data-theme="light"] {
 }
 
 html[data-theme="dark"] {
-  --background: #212737;
+  --background: #000000;
   --foreground: #eaedf3;
   --accent: #ff6b01;
   --muted: #343f60;
