@@ -21,8 +21,8 @@ export default defineConfig({
   ],
   markdown: {
     remarkPlugins: [
-      [remarkToc, { heading: "Mục lục" }],
-      [remarkToc, [remarkCollapse, { test: "Mục lục" }]],
+      [remarkToc, { heading: "Mục lục" }],        // Plugin 1: Tạo mục lục
+      [remarkCollapse, { test: "Mục lục" }]    // Plugin 2: Ẩn/hiện mục lục
     ],
     shikiConfig: {
       // For more themes, visit https://shiki.style/themes
